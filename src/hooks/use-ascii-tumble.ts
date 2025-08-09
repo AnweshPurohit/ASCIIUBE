@@ -30,7 +30,7 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
   const cubes: Cube[] = [];
   for (let i = 0; i < numCubes; i++) {
     cubes.push({
-      size: 20,
+      size: 25,
       center: {
         x: 0,
         y: 0,
