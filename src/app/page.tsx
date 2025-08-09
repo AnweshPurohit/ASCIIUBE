@@ -48,7 +48,7 @@ export default function Home() {
         </div>
       </div>
       <div className="p-4">
-        <div className="w-full max-w-4xl mx-auto p-2 border border-primary rounded-full flex items-center space-x-2">
+        <div className="group w-full max-w-4xl mx-auto p-2 border border-primary/20 rounded-full flex items-center space-x-2 animate-glowing-border bg-black/30 opacity-50 focus-within:opacity-100 transition-opacity duration-300">
           <Input
             id="cube-text"
             value={text}
