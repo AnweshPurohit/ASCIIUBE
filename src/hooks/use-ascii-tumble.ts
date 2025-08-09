@@ -22,11 +22,11 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
   const chars = ['.', ',', '-', '~', ':', ';', '=', '!', '*', '#', '$', '@'];
   for (let i = 0; i < numCubes; i++) {
     cubes.push({
-      size: 10 + Math.random() * 15,
+      size: 20,
       center: {
-        x: (Math.random() - 0.5) * 50,
-        y: (Math.random() - 0.5) * 50,
-        z: (Math.random() - 0.5) * 50,
+        x: 0,
+        y: 0,
+        z: 0,
       },
       rotation: {
         x: Math.random() * Math.PI * 2,
@@ -34,9 +34,9 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
         z: Math.random() * Math.PI * 2,
       },
       rotationSpeed: {
-        x: (Math.random() - 0.5) * 0.02,
-        y: (Math.random() - 0.5) * 0.02,
-        z: (Math.random() - 0.5) * 0.02,
+        x: (Math.random() - 0.5) * 0.005,
+        y: (Math.random() - 0.5) * 0.005,
+        z: (Math.random() - 0.5) * 0.005,
       },
       chars: [
         chars[Math.floor(Math.random() * chars.length)],

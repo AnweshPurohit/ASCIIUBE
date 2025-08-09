@@ -22,7 +22,7 @@ export default function Home() {
   }, []);
 
 
-  const screen = useAsciiTumble(dims.width, dims.height, 7); // Render 7 cubes
+  const screen = useAsciiTumble(dims.width, dims.height, 1); // Render 1 cube
 
   const screenString = dims.width > 0 ? screen.reduce((acc, char, index) => {
     return acc + char + ((index + 1) % dims.width === 0 ? "\n" : "");
