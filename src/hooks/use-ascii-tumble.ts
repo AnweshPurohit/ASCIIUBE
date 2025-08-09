@@ -74,6 +74,17 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
     }
   }, [width, height, numCubes, state]);
 
+  // Update luminance characters when text changes
+  useEffect(() => {
+    if (text && text.length > 0) {
+      state.luminanceChars = text.split('');
+      state.step = Math.max(0.1, 1 / (text.length / 5 + 1));
+    } else {
+      state.luminanceChars = defaultChars.split('');
+      state.step = 0.5;
+    }
+  }, [text, state]);
+
   const rotatePoint = (p: Vector3, rot: Vector3): Vector3 => {
       const cosA = Math.cos(rot.x), sinA = Math.sin(rot.x);
       const cosB = Math.cos(rot.y), sinB = Math.sin(rot.y);
@@ -120,15 +131,6 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
   // Effect for animation loop
   useEffect(() => {
     if (width <= 0 || height <= 0) return;
-    
-    // Update luminance characters and step based on input text
-    if (text && text.length > 0) {
-      state.luminanceChars = text.split('');
-      state.step = Math.max(0.1, 1 / (text.length / 5 + 1));
-    } else {
-      state.luminanceChars = defaultChars.split('');
-      state.step = 0.5;
-    }
 
     const animate = () => {
       state.output.fill(' ');
@@ -183,7 +185,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [width, height, text, state]);
+  }, [width, height, state]);
 
   return screen;
 };
