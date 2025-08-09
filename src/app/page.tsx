@@ -29,7 +29,7 @@ export default function Home() {
   }, "") : "";
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 overflow-hidden">
+    <main className="flex flex-col items-center justify-start min-h-screen bg-background text-foreground p-4 overflow-hidden pt-12">
       <div className="w-full flex justify-center">
         {dims.width > 0 && (
           <pre
