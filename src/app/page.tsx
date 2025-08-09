@@ -14,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     const setDimensions = () => {
-      const fixedWidth = 120;
+      const fixedWidth = 160;
       const fixedHeight = 40;
       setDims({ width: fixedWidth, height: fixedHeight });
     };
