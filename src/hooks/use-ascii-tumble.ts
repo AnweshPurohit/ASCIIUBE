@@ -55,27 +55,27 @@ const createCubes = (numCubes: number): Cube[] => {
 export const useAsciiTumble = (width: number, height: number, numCubes: number, text: string): string[] => {
   const [screen, setScreen] = useState<string[]>([]);
   const animationRef = useRef<number>();
-
-  const state = useRef({
+  const stateRef = useRef({
     cubes: [] as Cube[],
     zBuffer: new Float32Array(0),
     output: [] as string[],
     luminanceChars: defaultChars.split(''),
     step: 0.5,
-  }).current;
+  });
 
   // Effect to handle initialization and resizing
   useEffect(() => {
     if (width > 0 && height > 0) {
-      state.cubes = createCubes(numCubes);
-      state.zBuffer = new Float32Array(width * height);
-      state.output = Array(width * height).fill(' ');
+      stateRef.current.cubes = createCubes(numCubes);
+      stateRef.current.zBuffer = new Float32Array(width * height);
+      stateRef.current.output = Array(width * height).fill(' ');
       setScreen(Array(width * height).fill(' '));
     }
-  }, [width, height, numCubes, state]);
+  }, [width, height, numCubes]);
 
   // Update luminance characters when text changes
   useEffect(() => {
+    const state = stateRef.current;
     if (text && text.length > 0) {
       state.luminanceChars = text.split('');
       state.step = Math.max(0.1, 1 / (text.length / 5 + 1));
@@ -83,7 +83,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
       state.luminanceChars = defaultChars.split('');
       state.step = 0.5;
     }
-  }, [text, state]);
+  }, [text]);
 
   const rotatePoint = (p: Vector3, rot: Vector3): Vector3 => {
       const cosA = Math.cos(rot.x), sinA = Math.sin(rot.x);
@@ -104,6 +104,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
     cubeCenter: Vector3,
     luminanceChars: string[]
   ) => {
+    const state = stateRef.current;
     // Rotate point and normal
     const rotatedPoint = rotatePoint(point, rotation);
     const rotatedNormal = rotatePoint(normal, rotation);
@@ -133,6 +134,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
     if (width <= 0 || height <= 0) return;
 
     const animate = () => {
+      const state = stateRef.current;
       state.output.fill(' ');
       state.zBuffer.fill(0);
 
@@ -185,7 +187,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [width, height, state]);
+  }, [width, height]);
 
   return screen;
 };
