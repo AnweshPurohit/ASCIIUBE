@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-start min-h-screen bg-background text-foreground px-4 overflow-hidden">
-      <div className="w-full flex justify-center pt-4">
+      <div className="w-full flex justify-center">
         {dims.width > 0 && (
           <pre
             ref={containerRef}
