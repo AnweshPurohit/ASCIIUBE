@@ -196,7 +196,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number, 
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [width, height, state, text]);
+  }, [width, height, state]);
 
   return screen;
 };
