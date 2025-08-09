@@ -125,7 +125,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number):
         cube.rotation.z += cube.rotationSpeed.z;
 
         const halfSize = cube.size / 2;
-        const step = 0.5;
+        const step = 0.25;
 
         // Front face
         const frontNormal = {x: 0, y: 0, z: -1};
