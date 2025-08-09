@@ -19,7 +19,7 @@ const CUBE_DISTANCE = 100;
 
 const createCubes = (numCubes: number, width: number, height: number): Cube[] => {
   const cubes: Cube[] = [];
-  const chars = ['.', ',', '-', '~', ':', ';', '=', '!', '*', '#', '$', '@'];
+  const chars = ['@', '#', '$', '=', '*', '!', ';', ':', '~', '-', ',', '.'];
   for (let i = 0; i < numCubes; i++) {
     cubes.push({
       size: 20,
@@ -39,12 +39,12 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
         z: (Math.random() - 0.5) * 0.005,
       },
       chars: [
-        chars[Math.floor(Math.random() * chars.length)],
-        chars[Math.floor(Math.random() * chars.length)],
-        chars[Math.floor(Math.random() * chars.length)],
-        chars[Math.floor(Math.random() * chars.length)],
-        chars[Math.floor(Math.random() * chars.length)],
-        chars[Math.floor(Math.random() * chars.length)],
+        chars[0],
+        chars[1],
+        chars[2],
+        chars[3],
+        chars[4],
+        chars[5],
       ],
     });
   }
@@ -113,7 +113,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number):
         cube.rotation.z += cube.rotationSpeed.z;
 
         const halfSize = cube.size / 2;
-        const step = 1; // Density of points on the cube face
+        const step = 0.5; // Density of points on the cube face
 
         for (let x = -halfSize; x <= halfSize; x += step) {
           for (let y = -halfSize; y <= halfSize; y += step) {
