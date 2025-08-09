@@ -11,15 +11,23 @@ interface Cube {
   center: Vector3;
   rotation: Vector3;
   rotationSpeed: Vector3;
-  chars: string[];
 }
 
 const K1 = 40; // Scale factor for projection
 const CUBE_DISTANCE = 100;
 
+// Lighting
+const lightSource: Vector3 = { x: 0, y: 1, z: -1 };
+// Normalize light source vector
+const lightSourceMag = Math.sqrt(lightSource.x ** 2 + lightSource.y ** 2 + lightSource.z ** 2);
+lightSource.x /= lightSourceMag;
+lightSource.y /= lightSourceMag;
+lightSource.z /= lightSourceMag;
+
+const luminanceChars = '.,-~:;=!*#$@'.split('');
+
 const createCubes = (numCubes: number, width: number, height: number): Cube[] => {
   const cubes: Cube[] = [];
-  const chars = ['@', '#', '$', '=', '*', '!', ';', ':', '~', '-', ',', '.'];
   for (let i = 0; i < numCubes; i++) {
     cubes.push({
       size: 20,
@@ -34,18 +42,10 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
         z: Math.random() * Math.PI * 2,
       },
       rotationSpeed: {
-        x: (Math.random() - 0.5) * 0.005,
-        y: (Math.random() - 0.5) * 0.005,
-        z: (Math.random() - 0.5) * 0.005,
+        x: 0.005,
+        y: 0.005,
+        z: 0.005,
       },
-      chars: [
-        '=', // Front
-        '.', // Back
-        '#', // Left
-        '$', // Right
-        '@', // Top
-        ';', // Bottom
-      ],
     });
   }
   return cubes;
@@ -70,32 +70,44 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number):
     }
   }, [width, height, numCubes]);
 
+  const rotatePoint = (p: Vector3, rot: Vector3): Vector3 => {
+      const cosA = Math.cos(rot.x), sinA = Math.sin(rot.x);
+      const cosB = Math.cos(rot.y), sinB = Math.sin(rot.y);
+      const cosC = Math.cos(rot.z), sinC = Math.sin(rot.z);
+      
+      const x1 = p.x * (cosB * cosC) + p.y * (sinA * sinB * cosC - cosA * sinC) + p.z * (cosA * sinB * cosC + sinA * sinC);
+      const y1 = p.x * (cosB * sinC) + p.y * (sinA * sinB * sinC + cosA * cosC) + p.z * (cosA * sinB * sinC - sinA * cosC);
+      const z1 = -p.x * sinB + p.y * (sinA * cosB) + p.z * (cosA * cosB);
+
+      return { x: x1, y: y1, z: z1 };
+  }
+
   const calculateForSurface = (
-    cubeX: number, cubeY: number, cubeZ: number,
-    ch: string,
+    point: Vector3,
+    normal: Vector3,
     rotation: Vector3,
     cubeCenter: Vector3
   ) => {
-    const cosA = Math.cos(rotation.x), sinA = Math.sin(rotation.x);
-    const cosB = Math.cos(rotation.y), sinB = Math.sin(rotation.y);
-    const cosC = Math.cos(rotation.z), sinC = Math.sin(rotation.z);
+    // Rotate point and normal
+    const rotatedPoint = rotatePoint(point, rotation);
+    const rotatedNormal = rotatePoint(normal, rotation);
+    
+    // Calculate lighting
+    const dotProduct = rotatedNormal.x * lightSource.x + rotatedNormal.y * lightSource.y + rotatedNormal.z * lightSource.z;
+    const luminanceIndex = Math.floor((dotProduct + 1) * (luminanceChars.length - 1) / 2);
+    const char = luminanceChars[Math.max(0, Math.min(luminanceChars.length - 1, luminanceIndex))];
 
-    // Rotate around Y, then X, then Z
-    const x = cubeX * (cosB * cosC) + cubeY * (sinA * sinB * cosC - cosA * sinC) + cubeZ * (cosA * sinB * cosC + sinA * sinC);
-    const y = cubeX * (cosB * sinC) + cubeY * (sinA * sinB * sinC + cosA * cosC) + cubeZ * (cosA * sinB * sinC - sinA * cosC);
-    const z = -cubeX * sinB + cubeY * (sinA * cosB) + cubeZ * (cosA * cosB);
-
-    const finalZ = z + cubeCenter.z + CUBE_DISTANCE;
+    const finalZ = rotatedPoint.z + cubeCenter.z + CUBE_DISTANCE;
     const ooz = 1 / finalZ;
 
-    const xp = Math.floor(width / 2 + K1 * ooz * (x + cubeCenter.x));
-    const yp = Math.floor(height / 2 - K1 * ooz * (y + cubeCenter.y));
+    const xp = Math.floor(width / 2 + K1 * ooz * (rotatedPoint.x + cubeCenter.x));
+    const yp = Math.floor(height / 2 - K1 * ooz * (rotatedPoint.y + cubeCenter.y));
 
     const idx = xp + yp * width;
     if (idx >= 0 && idx < width * height) {
       if (ooz > state.zBuffer[idx]) {
         state.zBuffer[idx] = ooz;
-        state.output[idx] = ch;
+        state.output[idx] = char;
       }
     }
   };
@@ -113,16 +125,48 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number):
         cube.rotation.z += cube.rotationSpeed.z;
 
         const halfSize = cube.size / 2;
-        const step = 0.5; // Density of points on the cube face
+        const step = 0.5;
 
+        // Front face
+        const frontNormal = {x: 0, y: 0, z: -1};
         for (let x = -halfSize; x <= halfSize; x += step) {
           for (let y = -halfSize; y <= halfSize; y += step) {
-            calculateForSurface(x, y, -halfSize, cube.chars[0], cube.rotation, cube.center); // Front
-            calculateForSurface(x, y, halfSize, cube.chars[1], cube.rotation, cube.center);   // Back
-            calculateForSurface(-halfSize, x, y, cube.chars[2], cube.rotation, cube.center); // Left
-            calculateForSurface(halfSize, x, y, cube.chars[3], cube.rotation, cube.center);  // Right
-            calculateForSurface(x, -halfSize, y, cube.chars[4], cube.rotation, cube.center); // Top
-            calculateForSurface(x, halfSize, y, cube.chars[5], cube.rotation, cube.center);  // Bottom
+            calculateForSurface({x: x, y: y, z: -halfSize}, frontNormal, cube.rotation, cube.center);
+          }
+        }
+        // Back face
+        const backNormal = {x: 0, y: 0, z: 1};
+        for (let x = -halfSize; x <= halfSize; x += step) {
+          for (let y = -halfSize; y <= halfSize; y += step) {
+            calculateForSurface({x: x, y: y, z: halfSize}, backNormal, cube.rotation, cube.center);
+          }
+        }
+        // Left face
+        const leftNormal = {x: -1, y: 0, z: 0};
+        for (let z = -halfSize; z <= halfSize; z += step) {
+          for (let y = -halfSize; y <= halfSize; y += step) {
+            calculateForSurface({x: -halfSize, y: y, z: z}, leftNormal, cube.rotation, cube.center);
+          }
+        }
+        // Right face
+        const rightNormal = {x: 1, y: 0, z: 0};
+         for (let z = -halfSize; z <= halfSize; z += step) {
+          for (let y = -halfSize; y <= halfSize; y += step) {
+            calculateForSurface({x: halfSize, y: y, z: z}, rightNormal, cube.rotation, cube.center);
+          }
+        }
+        // Top face
+        const topNormal = {x: 0, y: -1, z: 0};
+        for (let x = -halfSize; x <= halfSize; x += step) {
+          for (let z = -halfSize; z <= halfSize; z += step) {
+            calculateForSurface({x: x, y: -halfSize, z: z}, topNormal, cube.rotation, cube.center);
+          }
+        }
+        // Bottom face
+        const bottomNormal = {x: 0, y: 1, z: 0};
+        for (let x = -halfSize; x <= halfSize; x += step) {
+          for (let z = -halfSize; z <= halfSize; z += step) {
+            calculateForSurface({x: x, y: halfSize, z: z}, bottomNormal, cube.rotation, cube.center);
           }
         }
       });
