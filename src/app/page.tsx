@@ -56,7 +56,7 @@ export default function Home() {
             placeholder="Text field"
             className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg"
           />
-          <Button onClick={handleRender} className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button onClick={handleRender} className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-shadow duration-300 hover:shadow-[0_0_15px_2px_hsl(var(--primary)/0.4)]">
             beep!
           </Button>
         </div>
