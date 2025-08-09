@@ -43,9 +43,9 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
         z: Math.random() * Math.PI * 2,
       },
       rotationSpeed: {
-        x: 0.005,
-        y: 0.005,
-        z: 0.005,
+        x: 0.01,
+        y: 0.01,
+        z: 0.01,
       },
     });
   }
