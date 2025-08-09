@@ -39,12 +39,12 @@ const createCubes = (numCubes: number, width: number, height: number): Cube[] =>
         z: (Math.random() - 0.5) * 0.005,
       },
       chars: [
-        chars[0],
-        chars[1],
-        chars[2],
-        chars[3],
-        chars[4],
-        chars[5],
+        '=', // Front
+        '.', // Back
+        '#', // Left
+        '$', // Right
+        '@', // Top
+        ';', // Bottom
       ],
     });
   }
