@@ -11,6 +11,7 @@ export default function Home() {
   const [dims, setDims] = useState({ width: 0, height: 0 });
   const [text, setText] = useState(".,-~:;=!*#$@");
   const [renderText, setRenderText] = useState(text);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     const setDimensions = () => {
@@ -34,7 +35,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
-      <div className="flex-grow flex items-center justify-center">
+      <div className={`flex-grow flex items-center justify-center transition-all duration-500 ${isFocused ? 'blur-md' : 'blur-none'}`}>
         <div className="w-full flex justify-center">
           {dims.width > 0 && (
             <pre
@@ -48,11 +49,13 @@ export default function Home() {
         </div>
       </div>
       <div className="p-4">
-        <div className="group w-full max-w-4xl mx-auto p-2 border border-primary/20 rounded-full flex items-center space-x-2 animate-glowing-border bg-black/30 opacity-50 focus-within:opacity-100 transition-opacity duration-300">
+        <div className="group w-full max-w-4xl mx-auto p-2 rounded-full flex items-center space-x-2 animate-glowing-border bg-black/10 backdrop-blur-sm border border-primary/20 opacity-50 focus-within:opacity-100 transition-all duration-300">
           <Input
             id="cube-text"
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             placeholder="ASCII field"
             className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg"
           />
