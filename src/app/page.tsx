@@ -12,7 +12,7 @@ export default function Home() {
       // Set fixed dimensions for the ASCII art canvas
       // A responsive grid is complex, so we use a large fixed size
       // that works well on most desktop screens.
-      const fixedWidth = 140;
+      const fixedWidth = 180;
       const fixedHeight = 50;
       setDims({ width: fixedWidth, height: fixedHeight });
     };
