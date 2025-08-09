@@ -30,14 +30,6 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 overflow-hidden">
-      <div className="text-center mb-6">
-        <h1 className="text-5xl md:text-7xl font-headline font-bold text-primary mb-2 tracking-wider">
-          Turing Tumble
-        </h1>
-        <p className="text-accent text-sm md:text-base font-code">
-          An ASCII art 3D cube rendering experiment
-        </p>
-      </div>
       <div className="w-full flex justify-center">
         {dims.width > 0 && (
           <pre
