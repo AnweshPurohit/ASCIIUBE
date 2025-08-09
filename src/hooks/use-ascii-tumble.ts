@@ -113,7 +113,7 @@ export const useAsciiTumble = (width: number, height: number, numCubes: number):
         cube.rotation.z += cube.rotationSpeed.z;
 
         const halfSize = cube.size / 2;
-        const step = 2; // Density of points on the cube face
+        const step = 1; // Density of points on the cube face
 
         for (let x = -halfSize; x <= halfSize; x += step) {
           for (let y = -halfSize; y <= halfSize; y += step) {
