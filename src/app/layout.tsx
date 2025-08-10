@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Turing Tumble',
+  title: 'ASCIIUBE',
   description: 'An ASCII art 3D cube rendering experiment.',
 };
 
