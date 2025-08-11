@@ -1,4 +1,4 @@
-# **App Name**: Turing Tumble
+# **App Name**: ASCIIUBE
 
 ## Core Features:
 
