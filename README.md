@@ -1,4 +1,4 @@
-# ASCII Tumble Cube
+# ASCIUBE (ASCII + CUBE)
 
 This is a Next.js application that showcases an interactive 3D cube rendered using ASCII characters.
 
